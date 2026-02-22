@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Ivajlokostov\LaravelEgn\Tests\Unit;
+namespace MetalinvestRemko\LaravelEgn\Tests\Unit;
 
-use Ivajlokostov\LaravelEgn\Services\EgnService;
+use MetalinvestRemko\LaravelEgn\Services\EgnService;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 

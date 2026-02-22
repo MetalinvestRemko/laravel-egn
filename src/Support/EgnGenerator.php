@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Ivajlokostov\LaravelEgn\Support;
+namespace MetalinvestRemko\LaravelEgn\Support;
 
 use DateInterval;
 use DateTimeImmutable;
 use InvalidArgumentException;
-use Ivajlokostov\LaravelEgn\Services\EgnService;
+use MetalinvestRemko\LaravelEgn\Services\EgnService;
 
 class EgnGenerator
 {

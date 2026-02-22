@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Ivajlokostov\LaravelEgn\Services;
+namespace MetalinvestRemko\LaravelEgn\Services;
 
 use DateTimeImmutable;
 use DateTimeInterface;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
-use Ivajlokostov\LaravelEgn\Support\EgnDetailsResolver;
-use Ivajlokostov\LaravelEgn\Support\EgnGenerator;
-use Ivajlokostov\LaravelEgn\Support\EgnValidator;
+use MetalinvestRemko\LaravelEgn\Support\EgnDetailsResolver;
+use MetalinvestRemko\LaravelEgn\Support\EgnGenerator;
+use MetalinvestRemko\LaravelEgn\Support\EgnValidator;
 use stdClass;
 
 class EgnService

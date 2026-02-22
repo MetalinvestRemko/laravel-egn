@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Ivajlokostov\LaravelEgn\Tests\Feature;
+namespace MetalinvestRemko\LaravelEgn\Tests\Feature;
 
-use Ivajlokostov\LaravelEgn\Tests\TestCase;
+use MetalinvestRemko\LaravelEgn\Tests\TestCase;
 
 class LocaleAutoDetectionTest extends TestCase
 {

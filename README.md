@@ -12,7 +12,7 @@ Laravel пакет за:
 ## Инсталация
 
 ```bash
-composer require ivajlokostov/laravel-egn
+composer require metalinvestremko/laravel-egn
 ```
 
 Публикуване на конфигурацията (по желание):
@@ -26,7 +26,7 @@ php artisan vendor:publish --tag=egn-config
 ### Валидация
 
 ```php
-use Ivajlokostov\LaravelEgn\Facades\Egn;
+use MetalinvestRemko\LaravelEgn\Facades\Egn;
 
 $isValid = Egn::validate('6101057509');
 ```
@@ -177,7 +177,7 @@ composer test
 
 ## Website
 
-- https://github.com/ivajlokostov/laravel-egn
+- [Проверка и генериране на валидни ЕГН](https://egn.bg/)
 
 ## Лиценз
 

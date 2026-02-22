@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Ivajlokostov\LaravelEgn\Tests;
+namespace MetalinvestRemko\LaravelEgn\Tests;
 
-use Ivajlokostov\LaravelEgn\EgnServiceProvider;
+use MetalinvestRemko\LaravelEgn\EgnServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 abstract class TestCase extends Orchestra

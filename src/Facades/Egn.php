@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Ivajlokostov\LaravelEgn\Facades;
+namespace MetalinvestRemko\LaravelEgn\Facades;
 
 use Illuminate\Support\Facades\Facade;
 

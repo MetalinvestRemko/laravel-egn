@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Ivajlokostov\LaravelEgn\Tests\Unit;
+namespace MetalinvestRemko\LaravelEgn\Tests\Unit;
 
-use Ivajlokostov\LaravelEgn\Support\EgnValidator;
+use MetalinvestRemko\LaravelEgn\Support\EgnValidator;
 use PHPUnit\Framework\TestCase;
 
 class EgnValidatorTest extends TestCase

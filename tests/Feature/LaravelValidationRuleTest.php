@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Ivajlokostov\LaravelEgn\Tests\Feature;
+namespace MetalinvestRemko\LaravelEgn\Tests\Feature;
 
 use Illuminate\Support\Facades\Validator;
-use Ivajlokostov\LaravelEgn\Tests\TestCase;
+use MetalinvestRemko\LaravelEgn\Tests\TestCase;
 
 class LaravelValidationRuleTest extends TestCase
 {

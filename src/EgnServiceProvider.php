@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Ivajlokostov\LaravelEgn;
+namespace MetalinvestRemko\LaravelEgn;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
-use Ivajlokostov\LaravelEgn\Services\EgnService;
+use MetalinvestRemko\LaravelEgn\Services\EgnService;
 
 class EgnServiceProvider extends ServiceProvider
 {

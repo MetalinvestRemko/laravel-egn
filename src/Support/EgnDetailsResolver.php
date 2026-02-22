@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Ivajlokostov\LaravelEgn\Support;
+namespace MetalinvestRemko\LaravelEgn\Support;
 
 use DateTimeImmutable;
 use Illuminate\Support\Collection;

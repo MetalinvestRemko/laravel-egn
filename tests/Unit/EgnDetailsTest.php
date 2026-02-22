@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Ivajlokostov\LaravelEgn\Tests\Unit;
+namespace MetalinvestRemko\LaravelEgn\Tests\Unit;
 
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
-use Ivajlokostov\LaravelEgn\Services\EgnService;
+use MetalinvestRemko\LaravelEgn\Services\EgnService;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
