@@ -1,0 +1,46 @@
+{
+    "name": "ivajlokostov/laravel-egn",
+    "description": "Laravel package for validating and generating Bulgarian EGN (ЕГН).",
+    "homepage": "https://github.com/ivajlokostov/laravel-egn",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ivajlo Kostov"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "illuminate/support": "^10.0|^11.0|^12.0",
+        "illuminate/validation": "^10.0|^11.0|^12.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^8.0|^9.0|^10.0",
+        "phpunit/phpunit": "^10.0|^11.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Ivajlokostov\\LaravelEgn\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Ivajlokostov\\LaravelEgn\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Ivajlokostov\\LaravelEgn\\EgnServiceProvider"
+            ],
+            "aliases": {
+                "Egn": "Ivajlokostov\\LaravelEgn\\Facades\\Egn"
+            }
+        }
+    },
+    "scripts": {
+        "test": "phpunit"
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
