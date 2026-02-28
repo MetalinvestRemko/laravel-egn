@@ -1,37 +1,74 @@
 # Laravel EGN
 
-Laravel пакет за:
+[![Latest Stable Version](https://img.shields.io/packagist/v/metalinvestremko/laravel-egn?style=flat-square)](https://packagist.org/packages/metalinvestremko/laravel-egn)
+[![Total Downloads](https://img.shields.io/packagist/dt/metalinvestremko/laravel-egn?style=flat-square)](https://packagist.org/packages/metalinvestremko/laravel-egn)
+[![License](https://img.shields.io/packagist/l/metalinvestremko/laravel-egn?style=flat-square)](https://packagist.org/packages/metalinvestremko/laravel-egn)
+[![PHP Version](https://img.shields.io/packagist/dependency-v/metalinvestremko/laravel-egn/php?style=flat-square)](https://packagist.org/packages/metalinvestremko/laravel-egn)
+[![Tests](https://github.com/MetalinvestRemko/laravel-egn/actions/workflows/tests.yml/badge.svg)](https://github.com/MetalinvestRemko/laravel-egn/actions/workflows/tests.yml)
 
-- валидиране на българско ЕГН;
-- генериране на валидно ЕГН по незадължителни критерии:
-  - пол (`male|female|m|f`);
-  - дата на раждане (`date` или частично `year`, `month`, `day`);
-  - регион (`0..99`);
-  - брой генерирани ЕГН.
+A Laravel package for validating, parsing, and generating Bulgarian EGN numbers (ЕГН).
 
-## Инсталация
+## Features
+
+- Validate Bulgarian EGN numbers
+- Parse EGN into birth date and gender
+- Generate valid EGN numbers with optional constraints:
+  - gender (`male|female|m|f`)
+  - exact date (`date`) or partial date (`year`, `month`, `day`)
+  - region prefix (`0..99`)
+  - batch generation (`generate($count, ...)`)
+- Resolve rich EGN metadata via `details()`:
+  - localized output (`bg` / `en`)
+  - birth date formatting and weekday
+  - age
+  - region name and serial range
+  - birth order within region parity
+  - zodiac sign
+- Native Laravel validation rule: `egn`
+
+## Requirements
+
+- PHP `^8.1`
+- Laravel components:
+  - `illuminate/support ^10.0|^11.0|^12.0`
+  - `illuminate/validation ^10.0|^11.0|^12.0`
+
+## Installation
 
 ```bash
 composer require metalinvestremko/laravel-egn
 ```
 
-Публикуване на конфигурацията (по желание):
+## Configuration (Optional)
+
+Publish the config file:
 
 ```bash
 php artisan vendor:publish --tag=egn-config
 ```
 
-## Използване
+Config file: `config/egn.php`
 
-### Валидация
+```php
+return [
+    'start_year' => 1800,
+    'end_year' => 2099,
+];
+```
+
+These values define the default random generation range when `year` is not explicitly provided.
+
+## Usage
+
+### Validate EGN
 
 ```php
 use MetalinvestRemko\LaravelEgn\Facades\Egn;
 
-$isValid = Egn::validate('6101057509');
+$isValid = Egn::validate('6101057509'); // true
 ```
 
-Или като Laravel validation rule:
+### Laravel Validation Rule
 
 ```php
 $request->validate([
@@ -39,55 +76,72 @@ $request->validate([
 ]);
 ```
 
-### Парсване
+### Parse EGN
 
 ```php
 $parsed = Egn::parse('6101057509');
-// ['year' => 1961, 'month' => 1, 'day' => 5, 'gender' => 0]
-// gender: 0=female, 1=male
+
+// [
+//   'year' => 1961,
+//   'month' => 1,
+//   'day' => 5,
+//   'gender' => 0, // 0 = female, 1 = male
+// ]
 ```
 
-### Детайлен анализ (`array|object|collection`)
+### Get Detailed Metadata
 
 ```php
-$details = Egn::details('8702260780'); // array (default)
+$detailsArray = Egn::details('8702260780'); // default format: array
 $detailsObject = Egn::details('8702260780', 'object');
 $detailsCollection = Egn::details('8702260780', 'collection');
-$detailsEn = Egn::details('8702260780', 'array', 'en'); // locale override
+$detailsEn = Egn::details('8702260780', 'array', 'en');
 ```
 
-По подразбиране е `bg`. Ако не подадеш locale, пакетът ще използва `app()->getLocale()` само за `bg|en`, иначе пада обратно на `bg`.
+`details()` returns `null` for invalid EGN.
 
-Примерен резултат (`array`):
+Locale behavior:
+
+- If locale is provided, only `bg` and `en` are accepted
+- Unsupported locale values fallback to `bg`
+- If locale is omitted, package attempts `app()->getLocale()` and still restricts to `bg|en`
+
+Example (`array`, `en` locale):
 
 ```php
 [
     'egn' => '8702260780',
     'valid' => true,
-    'locale' => 'bg',
-    'gender' => 'жена',
+    'locale' => 'en',
+    'gender' => 'female',
     'gender_code' => 'female',
     'birth_date' => [
         'iso' => '1987-02-26',
-        'weekday' => 'четвъртък',
-        'formatted' => '26 февруари 1987 г. (четвъртък) (1987-02-26)',
+        'year' => 1987,
+        'month' => 2,
+        'day' => 26,
+        'weekday' => 'Thursday',
+        'formatted' => '26 February 1987 (Thursday) (1987-02-26)',
     ],
     'age' => 38,
     'region' => [
         'code' => 78,
-        'name' => 'Бургас',
+        'name' => 'Burgas',
+        'range_start' => 44,
+        'range_end' => 93,
     ],
     'birth_order' => 18,
     'zodiac' => [
-        'name' => 'Риби',
-        'label' => 'Риби (19 февруари - 20 март)',
+        'name' => 'Pisces',
+        'range' => '19 February - 20 March',
+        'label' => 'Pisces (19 February - 20 March)',
     ],
 ]
 ```
 
-### Генериране на 1 ЕГН
+### Generate One EGN
 
-Всички опции са незадължителни.
+All options are optional.
 
 ```php
 $egn = Egn::generateOne([
@@ -99,7 +153,7 @@ $egn = Egn::generateOne([
 ]);
 ```
 
-### Генериране на N ЕГН
+### Generate Multiple EGNs
 
 ```php
 $egns = Egn::generate(50, [
@@ -108,7 +162,7 @@ $egns = Egn::generate(50, [
 ]);
 ```
 
-### Пълен `date` вместо `year/month/day`
+### Use Exact Date
 
 ```php
 $egn = Egn::generateOne([
@@ -117,68 +171,86 @@ $egn = Egn::generateOne([
 ]);
 ```
 
-## Регионални кодове
+`date` accepts `DateTimeInterface|string|null`.
 
-| Код (value) | Регион |
+## Generation Options Reference
+
+- `gender`: `male|female|m|f`
+- `date`: exact date as `DateTimeInterface|string`
+- `year`: integer in configured range
+- `month`: integer `1..12`
+- `day`: integer `1..31` (validated against month/year)
+- `region`: integer `0..99`
+
+Notes:
+
+- `date` takes precedence over `year/month/day`
+- Invalid combinations (for example impossible date constraints) throw `InvalidArgumentException`
+
+## Region Mapping
+
+The package resolves region names from the EGN serial (digits 7-9) using inclusive upper bounds.
+
+| Upper Bound | Region (EN) |
 |---|---|
-| `0` | Случаен |
-| `43` | Благоевград |
-| `93` | Бургас |
-| `139` | Варна |
-| `169` | Велико Търново |
-| `183` | Видин |
-| `217` | Враца |
-| `233` | Габрово |
-| `281` | Кърджали |
-| `301` | Кюстендил |
-| `319` | Ловеч |
-| `341` | Монтана |
-| `377` | Пазарджик |
-| `395` | Перник |
-| `435` | Плевен |
-| `501` | Пловдив |
-| `527` | Разград |
-| `555` | Русе |
-| `575` | Силистра |
-| `601` | Сливен |
-| `623` | Смолян |
-| `721` | София - град |
-| `751` | София - окръг |
-| `789` | Стара Загора |
-| `821` | Добрич (Толбухин) |
-| `843` | Търговище |
-| `871` | Хасково |
-| `903` | Шумен |
-| `925` | Ямбол |
-| `999` | Друг/Неизвестен |
+| `43` | Blagoevgrad |
+| `93` | Burgas |
+| `139` | Varna |
+| `169` | Veliko Tarnovo |
+| `183` | Vidin |
+| `217` | Vratsa |
+| `233` | Gabrovo |
+| `281` | Kardzhali |
+| `301` | Kyustendil |
+| `319` | Lovech |
+| `341` | Montana |
+| `377` | Pazardzhik |
+| `395` | Pernik |
+| `435` | Pleven |
+| `501` | Plovdiv |
+| `527` | Razgrad |
+| `555` | Ruse |
+| `575` | Silistra |
+| `601` | Sliven |
+| `623` | Smolyan |
+| `721` | Sofia City |
+| `751` | Sofia District |
+| `789` | Stara Zagora |
+| `821` | Dobrich |
+| `843` | Targovishte |
+| `871` | Haskovo |
+| `903` | Shumen |
+| `925` | Yambol |
+| `999` | Other / Unknown |
 
-## Конфигурация
+## API Reference
 
-`config/egn.php`
+```php
+validate(string $egn): bool
+parse(string $egn): ?array
+details(string $egn, string $format = 'array', ?string $locale = null): array|object|collection|null
+generateOne(array $options = []): string
+generate(int $count = 1, array $options = []): array
+```
 
-- `start_year` (default `1800`)
-- `end_year` (default `2099`)
-
-Използват се при случайна генерация, когато не е подадена година.
-
-## API
-
-- `validate(string $egn): bool`
-- `parse(string $egn): ?array`
-- `details(string $egn, string $format = 'array', ?string $locale = null): array|object|collection|null`
-- `generateOne(array $options = []): string`
-- `generate(int $count = 1, array $options = []): array`
-
-## Тестове
+## Testing
 
 ```bash
 composer test
 ```
 
-## Website
+## Contributing
 
-- [Проверка и генериране на валидни ЕГН](https://egn.bg/)
+Contributions are welcome. Please open an issue or pull request with a clear description and test coverage for behavioral changes.
 
-## Лиценз
+## Security
 
-MIT
+If you discover a security issue, please report it privately to the maintainer before opening a public issue.
+
+## Related Website
+
+- [Check and generate valid Bulgarian EGN numbers](https://egn.bg/)
+
+## License
+
+MIT License. See [LICENSE](LICENSE).
